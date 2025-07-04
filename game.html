@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Guess My Number</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #222;
+      color: #eee;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      margin-top: 30px;
+      font-size: 36px;
+    }
+    .number {
+      font-size: 80px;
+      width: 150px;
+      margin: 30px auto;
+      padding: 20px;
+      background-color: #eee;
+      color: #222;
+      border-radius: 10px;
+    }
+    .input-group {
+      margin: 20px;
+    }
+    input {
+      font-size: 20px;
+      padding: 10px;
+      width: 60px;
+      text-align: center;
+    }
+    button {
+      font-size: 18px;
+      padding: 10px 20px;
+      margin: 10px;
+      cursor: pointer;
+    }
+    .message {
+      font-size: 24px;
+      margin: 20px;
+    }
+    .scoreboard {
+      font-size: 18px;
+      margin: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎯 Guess My Number (1 - 20)</h1>
+  <div class="number" id="number">?</div>
+  <div class="input-group">
+    <input type="number" id="guess" min="1" max="20" />
+    <button id="checkBtn" onclick="checkGuess()">Check</button>
+    <button onclick="resetGame()">Again</button>
+  </div>
+  <p class="message" id="message">Start guessing...</p>
+  <div class="scoreboard">
+    💯 Score: <span id="score">20</span><br />
+    🏆 Highscore: <span id="highscore">0</span>
+  </div>
+  <script>
+    let secretNumber = Math.floor(Math.random() * 20) + 1;
+    let score = 20;
+    let highscore = 0;
+    
+    function displayMessage(msg) {
+      document.getElementById("message").textContent = msg;
+    }
+    
+    function checkGuess() {
+      const guessInput = document.getElementById("guess");
+      const checkBtn = document.getElementById("checkBtn");
+      const guess = Number(guessInput.value);
+      const numberBox = document.getElementById("number");
+
+      if (!guess || guess < 1 || guess > 20) {
+        displayMessage("🚫 Enter a number between 1 and 20!");
+        return;
+      }
+
+      if (guess === secretNumber) {
+        displayMessage("🎉 Correct Number!");
+        numberBox.textContent = secretNumber;
+        document.body.style.backgroundColor = "#60b347";
+        if (score > highscore) {
+          highscore = score;
+          document.getElementById("highscore").textContent = highscore;
+        }
+        guessInput.disabled = true;
+        checkBtn.disabled = true;
+      } else {
+        displayMessage(guess > secretNumber ? "📉 Too high!" : "📈 Too low!");
+        score--;
+        document.getElementById("score").textContent = score;
+        if (score <= 0) {
+          displayMessage("💥 You lost the game!");
+          document.getElementById("score").textContent = 0;
+          numberBox.textContent = secretNumber;
+          guessInput.disabled = true;
+          checkBtn.disabled = true;
+        }
+      }
+    }
+    function resetGame() {
+      score = 20;
+      secretNumber = Math.floor(Math.random() * 20) + 1;
+      document.getElementById("score").textContent = score;
+      displayMessage("Start guessing...");
+      document.getElementById("number").textContent = "?";
+      document.getElementById("guess").value = "";
+      document.body.style.backgroundColor = "#222";
+      document.getElementById("guess").disabled = false;
+      document.getElementById("checkBtn").disabled = false;
+    }
+  </script>
+</body>
+</html>
